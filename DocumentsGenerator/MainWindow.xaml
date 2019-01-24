@@ -3,10 +3,238 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:local="clr-namespace:DocumentsGenerator"
         mc:Ignorable="d"
-        Title="Автоматичне заповнення документів" Height="630" FontWeight="DemiBold" Width="866">
+        Title="Автоматичне заповнення документів" fw:AcrylicWindow.Enabled="True" Icon="Resources/office.png" WindowStartupLocation="CenterScreen" Height="630" FontWeight="DemiBold" Width="866">
+    <Window.Resources>
+        <Style TargetType="RowDefinition">
+            <Setter Property="Height" Value="auto"></Setter>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="TextAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="13"></Setter>
+            <Setter Property="FontWeight" Value="DemiBold"></Setter>
+            <Setter Property="Margin" Value="2 2 20 2"></Setter>
+
+        </Style>
+        <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxRevealStyle}">
+            <Setter Property="Margin" Value="2"></Setter>
+            <Setter Property="FontWeight" Value="DemiBold"></Setter>
+            <Setter Property="FontSize" Value="12"></Setter>
+        </Style>
+        <Style TargetType="Border">
+            <Setter Property="BorderBrush" Value="Aquamarine" ></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            
+        </Style>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    </Window.Resources>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <ScrollViewer>
+            <Grid Margin="10" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <!--#region TextBlocks -->
+                    <Border Grid.Row="0">
+                        <TextBlock Text="Договір №" />
+                    </Border>
+                    <Border Grid.Row="1">
+                        <TextBlock Text="Дата договору" />
+                    </Border>
+                    <Border Grid.Row="2">
+                        <TextBlock Text="Назва фірми, ГО, ПАТ, ФОП" />
+                    </Border>
+                    <Border  Grid.Row="3">
+                        <TextBlock Text="Дата початку оренди"/>
+                    </Border>
+                    <Border Grid.Row="4">
+                        <TextBlock Text="Дата завершення оренди" />
+                    </Border>
+                    <Border Grid.Row="5">
+                        <TextBlock Text="Поштовий індекс" />
+                    </Border>
+                    <Border Grid.Row="6">
+                        <TextBlock Text="Адреса" />
+                    </Border>
+                    <Border Grid.Row="7">
+                        <TextBlock Text="Розрахунковий рахунок" />
+                    </Border>
+                    <Border Grid.Row="8">
+                        <TextBlock Text="МФО Банку" />
+                    </Border>
+                    <Border Grid.Row="9">
+                        <TextBlock Text="Назва банку:" />
+                    </Border>
+                    <Border Grid.Row="10">
+                        <TextBlock Text="ЄДРПОУ фірми, ФОП" />
+                    </Border>
+                    <Border Grid.Row="11">
+                        <TextBlock Text="Рахунок-фактура  № С-" />
+                    </Border>
+                    <Border Grid.Row="12">
+                        <TextBlock Text="Рахунок-фактура від (дата)" />
+                    </Border>
+                    <Border Grid.Row="13">
+                        <TextBlock Text="Номер Акту виконаних робіт (в залежності від дати)" />
+                    </Border >
+                    <Border Grid.Row="14">
+                        <TextBlock Text="Дата Акту виконаних робіт" />
+                    </Border>
+                    <Border Grid.Row="15">
+                        <TextBlock Text="Директор фірми:" />
+                    </Border>
+                    <Border Grid.Row="16">
+                        <TextBlock Text="Загальна сума" />
+                    </Border>
+                    <Border Grid.Row="17">
+                        <TextBlock Text="Загальна сума прописом" />
+                    </Border>
+                    <Border Grid.Row="18">
+                        <TextBlock Text="Сума без ПДВ" />
+                    </Border>
+                    <Border Grid.Row="19">
+                        <TextBlock Text="Адреса використання обладнання:" />
+                    </Border>
+
+                    <!--#region TextBoxs-->
+                    <Border Grid.Column="1" Grid.Row="0">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="1">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="2">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="3">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="4">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="5">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="6">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="7">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="8">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="9">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="10">
+                        <TextBox/>
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="11">
+                        <TextBox />
+                    </Border>
+                    <Border  Grid.Column="1" Grid.Row="12">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="13">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="14">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="15">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="16">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="17">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="18">
+                        <TextBox />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="19">
+                        <TextBox />
+                    </Border>
+                    <!--#endregion-->
+                </Grid>
+                <Border Grid.ColumnSpan="22" Grid.Row="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Expander Name="DataExpander" FontSize="11">
+                            <Expander.Header>
+                                <TextBlock Foreground="LightBlue" Text="Список обладнання"/>
+                            </Expander.Header>
+                            <Grid  Height="100">
+                                <DataGrid CanUserAddRows="False" AutoGenerateColumns="False" >
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn  Binding="{Binding Name}" Width="200" TextBlock.TextAlignment="Center"  Header="Найменування"   />
+                                        <DataGridHyperlinkColumn Binding="{Binding Count}" Width="100" Header="Кількість, шт." />
+                                        <DataGridTextColumn Binding="{Binding Amount}"  Header="Відновна вартість за шт." Width="120" />
+                                        <DataGridTextColumn Binding="{Binding Termin}" Header="Строк оренди" Width="auto" />
+                                        <DataGridTextColumn Binding="{Binding StartDate}" Header="дата початку оренди" Width="Auto" />
+                                        <DataGridTextColumn Binding="{Binding EndDate}" Header="дата кінця оренди" Width="Auto" />
+                                        <DataGridTextColumn Binding="{Binding Sum}" Header="Сума" Width="70" />
+                                    </DataGrid.Columns>
+
+                                </DataGrid>
+
+                            </Grid>
+                        </Expander>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">
+                            <Button Style="{StaticResource ButtonRevealStyle}" Visibility="{Binding ElementName=DataExpander,Path=IsExpanded,Converter={StaticResource BooleanToVisibilityConverter}}" FontWeight="Bold" Padding="0 0 0 2" FontSize="15" HorizontalContentAlignment="Center" HorizontalAlignment="Center"  VerticalContentAlignment="Center" Height="20" Width="20" VerticalAlignment="Center">+</Button>
+                            <Button Style="{StaticResource ButtonRevealStyle}" FontSize="15" FontWeight="Bold" Margin="0 5 0 0" Visibility="{Binding ElementName=DataExpander,Path=IsExpanded,Converter={StaticResource BooleanToVisibilityConverter}}">-</Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <StackPanel fw:PointerTracker.Enabled="True" Grid.Row="2">
+                    <Button Foreground="White" Margin="5" Style="{StaticResource ButtonRevealStyle}" FontSize="12" FontWeight="DemiBold" Width="auto" >Згенерувати документи</Button>
+                    <ProgressBar Visibility="Collapsed" Foreground="DarkBlue"   Margin="5 0" Height="30" Name="Progress"></ProgressBar>
+                </StackPanel>
+            </Grid>
+
+        </ScrollViewer>
     </Grid>
 </Window>
