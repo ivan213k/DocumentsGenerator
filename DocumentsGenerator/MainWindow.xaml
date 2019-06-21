@@ -13,15 +13,15 @@
         </Style>
         <Style TargetType="TextBlock">
             <Setter Property="TextAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="12"></Setter>
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
-            <Setter Property="FontSize" Value="13"></Setter>
-            <Setter Property="FontWeight" Value="DemiBold"></Setter>
             <Setter Property="Margin" Value="2 2 20 2"></Setter>
 
         </Style>
         <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxRevealStyle}">
             <Setter Property="Margin" Value="2"></Setter>
             <Setter Property="FontWeight" Value="DemiBold"></Setter>
+            <Setter Property="Padding" Value="0"></Setter>
             <Setter Property="FontSize" Value="12"></Setter>
         </Style>
         <Style TargetType="Border">
@@ -71,7 +71,7 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <!--#region TextBlocks -->
+
                     <Border Grid.Row="0">
                         <TextBlock Text="Договір №" />
                     </Border>
@@ -133,7 +133,6 @@
                         <TextBlock Text="Адреса використання обладнання:" />
                     </Border>
 
-                    <!--#region TextBoxs-->
                     <Border Grid.Column="1" Grid.Row="0">
                         <TextBox />
                     </Border>
@@ -194,7 +193,6 @@
                     <Border Grid.Column="1" Grid.Row="19">
                         <TextBox />
                     </Border>
-                    <!--#endregion-->
                 </Grid>
                 <Border Grid.ColumnSpan="22" Grid.Row="1">
                     <Grid>
@@ -204,7 +202,7 @@
                         </Grid.ColumnDefinitions>
                         <Expander Name="DataExpander" FontSize="11">
                             <Expander.Header>
-                                <TextBlock Foreground="LightBlue" Text="Список обладнання"/>
+                                <TextBlock  Text="Список обладнання"/>
                             </Expander.Header>
                             <Grid  Height="100">
                                 <DataGrid CanUserAddRows="False" AutoGenerateColumns="False" >
@@ -230,7 +228,7 @@
                 </Border>
 
                 <StackPanel fw:PointerTracker.Enabled="True" Grid.Row="2">
-                    <Button Foreground="White" Margin="5" Style="{StaticResource ButtonRevealStyle}" FontSize="12" FontWeight="DemiBold" Width="auto" >Згенерувати документи</Button>
+                    <Button Foreground="Blue" Margin="5" Style="{StaticResource ButtonRevealStyle}" FontSize="12" FontWeight="DemiBold" Width="auto" >Згенерувати документи</Button>
                     <ProgressBar Visibility="Collapsed" Foreground="DarkBlue"   Margin="5 0" Height="30" Name="Progress"></ProgressBar>
                 </StackPanel>
             </Grid>
