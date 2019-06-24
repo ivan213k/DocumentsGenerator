@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DocumentsGenerator.Models;
+using DocumentsGenerator.ViewModels;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DocumentsGenerator
 {
@@ -23,6 +14,86 @@ namespace DocumentsGenerator
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var dialogResult = new DialogWindow().ShowDialog();
+            if (dialogResult.Value == true)
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                using (FileStream fs = new FileStream("data.dat", FileMode.OpenOrCreate))
+                {
+                    var viewModel = this.DataContext as MainViewModel;
+                    var docData = new DocumentData()
+                    {
+                        ContractId = viewModel.ContractId,
+                        ContractDate = viewModel.ContractDate,
+                        CompanyName = viewModel.CompanyName,
+                        StartRentDate = viewModel.StartRentDate,
+                        EndRentDate = viewModel.EndRentDate,
+                        PostIndex = viewModel.PostIndex,
+                        Adress = viewModel.Adress,
+                        FacktureId = viewModel.SettlementAccount,
+                        MFO = viewModel.BankMFO,
+                        Bank = viewModel.BankName,
+                        EDROPOY = viewModel.CompanyYEDROPOU,
+                        AccountId = viewModel.AccountId,
+                        AccountDate = viewModel.AccountDate,
+                        ActId = viewModel.ActId,
+                        ActDate = viewModel.ActDate,
+                        DirectoryName = viewModel.CompanyDirector,
+                        TotalAmount = viewModel.TotalAmount,
+                        TotalAmountInWords = viewModel.TotalAmountInWords,
+                        AmountWithoutPDV = viewModel.TotalAmountWithoutPDV,
+                        AmountWithoutPDVInWords = viewModel.TotalAmountWithoutPDVInWords,
+                        EquipmentUsingAdress = viewModel.EquipmentUsingAdress
+                    };
+                    formatter.Serialize(fs, docData);
+                }
+            }
+            else
+            {
+                if (File.Exists("data.dat")) File.Delete("data.dat");  
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            using (FileStream fs = new FileStream("data.dat",FileMode.OpenOrCreate))
+            {
+                try
+                {
+                    var documentData = (DocumentData)formatter.Deserialize(fs);
+                    var viewModel = this.DataContext as MainViewModel;
+                    viewModel.ContractId = documentData.ContractId;
+                    viewModel.ContractDate = documentData.ContractDate;
+                    viewModel.CompanyName = documentData.CompanyName;
+                    viewModel.StartRentDate = documentData.StartRentDate;
+                    viewModel.EndRentDate = documentData.EndRentDate;
+                    viewModel.PostIndex = documentData.PostIndex;
+                    viewModel.Adress = documentData.Adress;
+                    viewModel.SettlementAccount = documentData.FacktureId;
+                    viewModel.BankMFO = documentData.MFO;
+                    viewModel.BankName = documentData.Bank;
+                    viewModel.CompanyYEDROPOU = documentData.EDROPOY;
+                    viewModel.AccountId = documentData.AccountId;
+                    viewModel.AccountDate = documentData.AccountDate;
+                    viewModel.ActId = documentData.ActId;
+                    viewModel.ActDate = documentData.ActDate;
+                    viewModel.CompanyDirector = documentData.DirectoryName;
+                    viewModel.TotalAmount = documentData.TotalAmount;
+                    viewModel.TotalAmountInWords = documentData.TotalAmountInWords;
+                    viewModel.TotalAmountWithoutPDV = documentData.AmountWithoutPDV;
+                    viewModel.TotalAmountWithoutPDVInWords = documentData.AmountWithoutPDVInWords;
+                    viewModel.EquipmentUsingAdress = documentData.EquipmentUsingAdress;
+                }
+                catch 
+                {
+                    //ignore
+                }
+            }
         }
     }
 }

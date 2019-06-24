@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using DocumentsGenerator.Models;
@@ -80,6 +81,7 @@ namespace DocumentsGenerator.ViewModels
 
         public string EquipmentUsingAdress { get => equipmentUsingAdress; set { equipmentUsingAdress = value; OnePropertyChanged(); } }
 
+       
         public ObservableCollection<Equipment> Equipments { get; set; }
 
 
@@ -93,9 +95,33 @@ namespace DocumentsGenerator.ViewModels
 
         void GenerateDocuments(object parametr = null)
         {
-
+            var contractGenerator = new ContractGenerator();
+            contractGenerator.GenerateContract(InitContractDictionary(), "TestCon.doc");
         }
 
+        Dictionary<string,string> InitContractDictionary()
+        {
+            return new Dictionary<string, string>()
+            {
+                {"ContractNumber",ContractId},
+                {"ContractDate",ContractDate.Value.GetDateTimeFormats()[3].Replace("р.","року")},
+                {"CompanyName",CompanyName},
+                {"StartDate",StartRentDate.Value.GetDateTimeFormats()[1].Remove(5)},
+                {"EndDate",EndRentDate.Value.GetDateTimeFormats()[3].Replace("р.","року")},
+                {"PostIndex",PostIndex },
+                {"Adress",Adress },
+                {"AccountNumber",SettlementAccount },
+                {"Bank",BankName },
+                {"MFO",BankMFO },
+                {"CodeEDRPOY",CompanyYEDROPOU },
+                {"ShortDate",ContractDate.Value.GetDateTimeFormats()[1] },
+                {"FullDate",ContractDate.Value.GetDateTimeFormats()[0]+"р." },
+                {"Sum",TotalAmount.ToString() },
+                {"EqPlace",EquipmentUsingAdress},
+                {"ByWords",TotalAmountInWords},
+                {"DirectoryName",CompanyDirector }
+            };
+        }
         void ClearWindow(object parametr = null)
         {
             ContractId = "";
@@ -138,7 +164,6 @@ namespace DocumentsGenerator.ViewModels
                 Equipments.Add(new Equipment());
             }
         }
-
         void RemoveEquipment(object parametr = null)
         {
             int selectedIndex = (int)parametr;

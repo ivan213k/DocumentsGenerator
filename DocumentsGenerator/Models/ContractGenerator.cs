@@ -1,28 +1,41 @@
-﻿using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace DocumentsGenerator.Models
 {
     class ContractGenerator
     {
-        private readonly string templateFile = "Договор_Template.doc"; 
+        private readonly string templateFile = "Договор_Template.docx"; 
 
-        public async Task GenerateContractAsync(List<KeyValuePair<string,string>> valuePairs, string filePath)
+        public void GenerateContract(Dictionary<string,string> valuePairs, string filePath)
         {
-            using (WordprocessingDocument doc = WordprocessingDocument.Open(templateFile,true))
+            string docText = "";
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(templateFile,true))
             {
-                var document = doc.MainDocumentPart.Document;
-
-                foreach (var text in document.Descendants<Text>())
+                using (StreamReader sr = new StreamReader(wordDoc.MainDocumentPart.GetStream()))
                 {
-                    if (text.Text.Contains("text-to-replace"))
-                    {
-                        text.Text = text.Text.Replace("text-to-replace", "replaced-text");
-                    }
+                    docText = sr.ReadToEnd();
+                }
+
+                foreach (var item in valuePairs)
+                {
+                    Regex regexText = new Regex(item.Key);
+                    docText = regexText.Replace(docText, item.Value);
+                }
+                
+                var savedDoc = wordDoc.SaveAs(filePath);
+                savedDoc.Close();
+            }
+            using (WordprocessingDocument generatedDocument = WordprocessingDocument.Open(filePath, true))
+            {
+                using (StreamWriter sw = new StreamWriter(generatedDocument.MainDocumentPart.GetStream(FileMode.Create)))
+                {
+                    sw.Write(docText);
                 }
             }
         }
+
     }
 }
