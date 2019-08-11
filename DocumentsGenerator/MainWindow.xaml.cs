@@ -3,6 +3,7 @@ using DocumentsGenerator.ViewModels;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
+using System.Windows.Input;
 
 namespace DocumentsGenerator
 {
@@ -93,6 +94,32 @@ namespace DocumentsGenerator
                 {
                     //ignore
                 }
+            }
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down)
+            {
+                MoveToNextUIElement(e,FocusNavigationDirection.Next);
+            }
+            if (e.Key == Key.Up)
+            {
+                MoveToNextUIElement(e, FocusNavigationDirection.Previous);
+            }
+        }
+        void MoveToNextUIElement(KeyEventArgs e, FocusNavigationDirection focusDirection)
+        {
+            // MoveFocus takes a TraveralReqest as its argument.
+            TraversalRequest request = new TraversalRequest(focusDirection);
+
+            // Gets the element with keyboard focus.
+            UIElement elementWithFocus = Keyboard.FocusedElement as UIElement;
+
+            // Change keyboard focus.
+            if (elementWithFocus != null)
+            {
+                if (elementWithFocus.MoveFocus(request)) e.Handled = true;
             }
         }
     }

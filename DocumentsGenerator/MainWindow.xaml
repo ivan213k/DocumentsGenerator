@@ -144,13 +144,13 @@
                     </Border>
 
                     <Border Grid.Column="1" Grid.Row="0">
-                        <TextBox Text="{Binding ContractId}" />
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding ContractId}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="1">
                         <wpfTool:DateTimePicker Value="{Binding ContractDate}" Margin="2" Format="Custom" FormatString="dd/MM/yy" TextAlignment="Left"/>
                     </Border>
                     <Border Grid.Column="1" Grid.Row="2">
-                        <TextBox Text="{Binding CompanyName}" />
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding CompanyName}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="3">
                         <wpfTool:DateTimePicker Value="{Binding StartRentDate}" Margin="2" TextAlignment="Left" Format="Custom" FormatString="dd/MM" />
@@ -159,49 +159,49 @@
                         <wpfTool:DateTimePicker Value="{Binding EndRentDate}" Margin="2" TextAlignment="Left" Format="Custom" FormatString="dd/MM" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="5">
-                        <TextBox Text="{Binding PostIndex}" />
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding PostIndex}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="6">
-                        <TextBox Text="{Binding Adress}" />
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding Adress}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="7">
-                        <TextBox Text="{Binding SettlementAccount}" />
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding SettlementAccount}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="8">
-                        <TextBox Text="{Binding BankMFO}" />
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding BankMFO}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="9">
-                        <TextBox Text="{Binding BankName}" />
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding BankName}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="10">
-                        <TextBox Text="{Binding CompanyYEDROPOU}"/>
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding CompanyYEDROPOU}"/>
                     </Border>
                     <Border Grid.Column="1" Grid.Row="11">
-                        <TextBox Text="{Binding AccountId}"/>
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding AccountId}"/>
                     </Border>
                     <Border  Grid.Column="1" Grid.Row="12">
                         <wpfTool:DateTimePicker Value="{Binding AccountDate}" Margin="2" TextAlignment="Left" Format="Custom" FormatString="dd/MM/yy" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="13">
-                        <TextBox Text="{Binding ActId}" />
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding ActId}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="14">
                         <wpfTool:DateTimePicker Value="{Binding ActDate}" Margin="2" TextAlignment="Left" Format="Custom" FormatString="dd/MM/yy" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="15">
-                        <TextBox  Text="{Binding CompanyDirector}" />
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding CompanyDirector}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="16">
                         <wpfTool:DecimalUpDown Value="{Binding TotalAmount}" Margin="2" TextAlignment="Left" Minimum="0" FormatString="F2"/>
                     </Border>
                     <Border Grid.Column="1" Grid.Row="17">
-                        <TextBox Text="{Binding TotalAmountInWords}" />
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding TotalAmountInWords}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="18">
                         <wpfTool:DecimalUpDown Value="{Binding TotalAmountWithoutPDV}" Margin="2" TextAlignment="Left" Minimum="0" FormatString="F2"/>
                     </Border> 
                     <Border Grid.Column="1" Grid.Row="19">
-                        <TextBox Text="{Binding EquipmentUsingAdress}" />
+                        <TextBox KeyUp="TextBox_KeyDown" Text="{Binding EquipmentUsingAdress}" />
                     </Border>
                 </Grid>
                 <Border Grid.ColumnSpan="22" Grid.Row="1">
