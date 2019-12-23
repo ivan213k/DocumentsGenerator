@@ -219,11 +219,11 @@
                                     <DataGrid.Columns>
                                         <DataGridTextColumn  Binding="{Binding Name}" Width="200" TextBlock.TextAlignment="Center"  Header="Найменування"   />
                                         <DataGridHyperlinkColumn Binding="{Binding Count}" Width="100" Header="Кількість, шт." />
-                                        <DataGridTextColumn Binding="{Binding Amount}"  Header="Відновна вартість за шт." Width="120" />
+                                        <DataGridTextColumn Binding="{Binding ReplacmentCost}"  Header="Відновна вартість за шт." Width="120" />
                                         <DataGridTextColumn Binding="{Binding Termin}" Header="Строк оренди" Width="auto" />
                                         <DataGridTextColumn Binding="{Binding StartDate}" Header="Дата початку оренди" Width="Auto" />
                                         <DataGridTextColumn Binding="{Binding EndDate}" Header="Дата кінця оренди" Width="Auto" />
-                                        <DataGridTextColumn Binding="{Binding ReplacmentCost}" Header="Сума" Width="70" />
+                                        <DataGridTextColumn Binding="{Binding Amount}" Header="Сума" Width="70" />
                                     </DataGrid.Columns>
 
                                 </DataGrid>

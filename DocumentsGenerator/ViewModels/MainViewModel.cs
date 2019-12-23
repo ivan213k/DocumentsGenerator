@@ -96,7 +96,7 @@ namespace DocumentsGenerator.ViewModels
         void GenerateDocuments(object parametr = null)
         {
             var contractGenerator = new ContractGenerator();
-            contractGenerator.GenerateContract(InitContractDictionary(), "TestCon.doc");
+            contractGenerator.GenerateContract(InitContractDictionary(),Equipments, "TestCon.doc");
         }
 
         Dictionary<string,string> InitContractDictionary()
@@ -172,5 +172,6 @@ namespace DocumentsGenerator.ViewModels
                 Equipments.RemoveAt(selectedIndex);
             }
         }
+
     }
 }

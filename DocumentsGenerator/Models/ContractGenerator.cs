@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows;
 
 namespace DocumentsGenerator.Models
 {
@@ -12,7 +11,7 @@ namespace DocumentsGenerator.Models
     {
         private readonly string templateFile = "Договор_Template.docx"; 
 
-        public void GenerateContract(Dictionary<string,string> valuePairs, string filePath)
+        public void GenerateContract(Dictionary<string,string> valuePairs, IEnumerable<Equipment> equipments, string filePath)
         {
             string docText = "";
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(templateFile,true))
@@ -22,11 +21,7 @@ namespace DocumentsGenerator.Models
                     docText = sr.ReadToEnd();
                 }
 
-                foreach (var item in valuePairs)
-                {
-                    Regex regexText = new Regex(item.Key);
-                    docText = regexText.Replace(docText, item.Value);
-                }
+                docText = ReplaceMarkersByValues(valuePairs,docText);
                 
                 var savedDoc = wordDoc.SaveAs(filePath);
                 savedDoc.Close();
@@ -37,31 +32,46 @@ namespace DocumentsGenerator.Models
                 {
                     sw.Write(docText);
                 }
-                FillTable(null, generatedDocument);
+                FillTable(equipments, generatedDocument);
+                generatedDocument.Save();
             }
         }
 
-        void FillTable(List<Equipment> equipments, WordprocessingDocument wordDoc)
+        void FillTable(IEnumerable<Equipment> equipments, WordprocessingDocument wordDoc)
         {
-            var body = wordDoc.MainDocumentPart.Document.Body;
-            //var tables = body.Descendants<Table>().Where(tbl => tbl.GetFirstChild<TableRow>().Descendants<TableCell>().Count() == 8);
-            foreach (Table table in body.Descendants<Table>().Where(tbl => tbl.GetFirstChild<TableRow>().Descendants<TableCell>().Count() == 8))
+            var table =  wordDoc.MainDocumentPart.Document.Body.Elements<Table>().ToList()[1];
+            var firstRow = table.Elements<TableRow>().First();
+            var templateRow = table.Elements<TableRow>().Last();
+            var newRows = new List<TableRow>();
+
+            int rowIndex = 1;
+            foreach (var equipment in equipments)
             {
-                RunProperties runProperties = new RunProperties();
-                runProperties.AppendChild(new FontSize() { Val = "20" });
-                var run = new Run(new Text(" 1 d ddd"));
-                run.PrependChild<RunProperties>(runProperties);
-                var lastTableRow = table.Elements<TableRow>().Last();
-                var newRow = lastTableRow.CloneNode(true);
-                newRow.Descendants<TableCell>().ElementAt(2).Descendants<Paragraph>().First().Descendants<Run>().First().Append(new Text("test"));
-                MessageBox.Show(newRow.InnerXml);
-               // newRow.Descendants<TableCell>().ElementAt(2).RemoveAllChildren<Paragraph>();
-                //newRow.Descendants<TableCell>().ElementAt(2).Append(new Paragraph(run));
-                table.Append(newRow);
-                //table.Insert(new TableRow(new TableCell(new Paragraph(new Run(new Text("")))), new TableCell(new Paragraph(new Run(new Text("test"))))), 2);
-                //table.Append(new TableRow(new TableCell(new Paragraph(new Run(new Text("")))), new TableCell(new Paragraph(new Run(new Text("test"))))));
+                var newRow = new TableRow(templateRow.OuterXml);
+                var cells = newRow.Elements<TableCell>().ToList();
+                cells[0].Elements<Paragraph>().First().Elements<Run>().First().Elements<Text>().First().Text = rowIndex.ToString();
+                foreach (var item in equipment.GetValues())
+                {
+                    cells[item.Key].Elements<Paragraph>().First().Elements<Run>().First().Elements<Text>().First().Text = item.Value;
+                }
+                newRows.Add(newRow);
+                rowIndex++;
             }
-            wordDoc.Save();
+
+            foreach (var row in newRows.Reverse<TableRow>())
+            {
+                table.InsertAfter(row, firstRow);
+            }
+        }
+
+        string ReplaceMarkersByValues(Dictionary<string,string> markerValuePairs,string docText)
+        {
+            foreach (var item in markerValuePairs)
+            {
+                Regex regexText = new Regex(item.Key);
+                docText = regexText.Replace(docText, item.Value);
+            }
+            return docText;
         }
     }
 }
