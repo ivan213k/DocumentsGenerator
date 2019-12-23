@@ -77,7 +77,7 @@ namespace DocumentsGenerator.ViewModels
 
         public decimal? TotalAmountWithoutPDV { get => totalAmountWithoutPDV; set { totalAmountWithoutPDV = value; OnePropertyChanged(); } }
 
-        public string TotalAmountWithoutPDVInWords { get => totalAmountWithoutPDVInWords; set { totalAmountWithoutPDVInWords = value; OnePropertyChanged(); } }
+        public string TotalAmountWithoutPDVInWords { get => TotalAmountWithoutPDV.ToString()+"(прописом)" ; set { totalAmountWithoutPDVInWords = value; OnePropertyChanged(); } }
 
         public string EquipmentUsingAdress { get => equipmentUsingAdress; set { equipmentUsingAdress = value; OnePropertyChanged(); } }
 
@@ -96,7 +96,9 @@ namespace DocumentsGenerator.ViewModels
         void GenerateDocuments(object parametr = null)
         {
             var contractGenerator = new ContractGenerator();
-            contractGenerator.GenerateContract(InitContractDictionary(),Equipments, "TestCon.doc");
+            var actGenerator = new ActGenerator();
+            //contractGenerator.GenerateContract(InitContractDictionary(),Equipments, "TestCon.doc");
+            actGenerator.GenerateAct(InitActDictionary(),"TestEx.xlsx");
         }
 
         Dictionary<string,string> InitContractDictionary()
@@ -120,6 +122,27 @@ namespace DocumentsGenerator.ViewModels
                 {"EqPlace",EquipmentUsingAdress},
                 {"ByWords",TotalAmountInWords},
                 {"DirectoryName",CompanyDirector }
+            };
+        }
+
+        Dictionary<string, string> InitActDictionary()
+        {
+            return new Dictionary<string, string>()
+            {
+                {"ActNumber",ActId },
+                {"CompanyName",CompanyName},
+                {"PostIndex",PostIndex },
+                {"Adress",Adress },
+                {"AccountNumber",SettlementAccount },
+                {"Bank",BankName },
+                {"MFO",BankMFO },
+                {"CodeEDRPOY",CompanyYEDROPOU },
+                {"ActDate" ,ActDate.Value.GetDateTimeFormats()[1]},
+                {"FactureNumber",AccountId },
+
+                { "FactureDate",AccountDate.Value.GetDateTimeFormats()[1] },
+                {"SumWithoutPDV",TotalAmountWithoutPDV.ToString() },
+                {"ByWords",TotalAmountWithoutPDVInWords},
             };
         }
         void ClearWindow(object parametr = null)

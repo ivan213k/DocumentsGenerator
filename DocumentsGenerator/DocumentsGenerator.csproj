@@ -86,6 +86,7 @@
     <Compile Include="DialogWindow.xaml.cs">
       <DependentUpon>DialogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\ActGenerator.cs" />
     <Compile Include="Models\ContractGenerator.cs" />
     <Compile Include="Models\DocumentData.cs" />
     <Compile Include="Models\Equipment.cs" />
