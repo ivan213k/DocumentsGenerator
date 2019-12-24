@@ -97,8 +97,10 @@ namespace DocumentsGenerator.ViewModels
         {
             var contractGenerator = new ContractGenerator();
             var actGenerator = new ActGenerator();
+            var accountGenerator = new AccountGenerator();
             //contractGenerator.GenerateContract(InitContractDictionary(),Equipments, "TestCon.doc");
-            actGenerator.GenerateAct(InitActDictionary(),"TestEx.xlsx");
+            //actGenerator.GenerateAct(InitActDictionary(),"TestEx.xlsx");
+            accountGenerator.GenerateAccount(InitAccountDictionary(),"TestAccount.xlsx");
         }
 
         Dictionary<string,string> InitContractDictionary()
@@ -143,6 +145,28 @@ namespace DocumentsGenerator.ViewModels
                 { "FactureDate",AccountDate.Value.GetDateTimeFormats()[1] },
                 {"SumWithoutPDV",TotalAmountWithoutPDV.ToString() },
                 {"ByWords",TotalAmountWithoutPDVInWords},
+            };
+        }
+
+        Dictionary<string, string> InitAccountDictionary()
+        {
+            return new Dictionary<string, string>()
+            {
+                {"CompanyName",CompanyName},
+                {"PostIndex",PostIndex },
+                {"Adress",Adress },
+                {"AccountNumber",SettlementAccount },
+                {"Bank",BankName },
+                {"MFO",BankMFO },
+                {"CodeEDRPOY",CompanyYEDROPOU },
+
+                { "FactureNumber",AccountId },
+
+                {"FactureDate",AccountDate.Value.GetDateTimeFormats()[1] },
+
+                { "SumWithoutPDV",TotalAmountWithoutPDV.ToString() },
+                {"ByWords",TotalAmountWithoutPDVInWords},
+                {"CountDay", (EndRentDate-StartRentDate).Value.Days.ToString() }
             };
         }
         void ClearWindow(object parametr = null)
