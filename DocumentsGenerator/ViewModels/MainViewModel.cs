@@ -30,7 +30,7 @@ namespace DocumentsGenerator.ViewModels
         private decimal? totalAmountWithoutPDV;
         private string totalAmountWithoutPDVInWords;
         private string equipmentUsingAdress;
-
+        MoneyToStrConverter moneyToStrConverter = new MoneyToStrConverter("UAH", "UKR", "F");
         public MainViewModel()
         {
             Equipments = new ObservableCollection<Equipment>();
@@ -72,13 +72,46 @@ namespace DocumentsGenerator.ViewModels
 
         public string CompanyDirector { get => companyDirector; set { companyDirector = value; OnePropertyChanged(); } }
 
-        public decimal? TotalAmount { get => totalAmount; set { totalAmount = value; OnePropertyChanged(); } }
+        public decimal? TotalAmount
+        {
+            get => totalAmount;
+            set
+            {
+                totalAmount = value;
+                try
+                {
+                    TotalAmountInWords = moneyToStrConverter.convertValue((double)value);
+                }
+                catch
+                {
+                    TotalAmountInWords = "";
+                }
+                
+                OnePropertyChanged();
+            }
+        }
 
         public string TotalAmountInWords { get => totalAmountInWords; set { totalAmountInWords = value; OnePropertyChanged(); } }
 
-        public decimal? TotalAmountWithoutPDV { get => totalAmountWithoutPDV; set { totalAmountWithoutPDV = value; OnePropertyChanged(); } }
+        public decimal? TotalAmountWithoutPDV
+        {
+            get => totalAmountWithoutPDV;
+            set
+            {
+                totalAmountWithoutPDV = value;
+                try
+                {
+                    TotalAmountWithoutPDVInWords = moneyToStrConverter.convertValue((double)value);
+                }
+                catch
+                {
+                    TotalAmountWithoutPDVInWords = "";
+                }
+                OnePropertyChanged();
+            }
+        }
 
-        public string TotalAmountWithoutPDVInWords { get => TotalAmountWithoutPDV.ToString()+"(прописом)" ; set { totalAmountWithoutPDVInWords = value; OnePropertyChanged(); } }
+        public string TotalAmountWithoutPDVInWords { get => totalAmountWithoutPDVInWords ; set { totalAmountWithoutPDVInWords = value; OnePropertyChanged(); } }
 
         public string EquipmentUsingAdress { get => equipmentUsingAdress; set { equipmentUsingAdress = value; OnePropertyChanged(); } }
 
@@ -220,7 +253,7 @@ namespace DocumentsGenerator.ViewModels
             ContractDate = null;
             StartRentDate = null;
             EndRentDate = null;
-            TotalAmount = null;
+            TotalAmount = 0.0M;
             TotalAmountInWords = "";
             TotalAmountWithoutPDV = null;
             TotalAmountWithoutPDVInWords = "";
