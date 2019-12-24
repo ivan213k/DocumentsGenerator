@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Forms;
 using System.Windows.Input;
 using DocumentsGenerator.Models;
 
@@ -81,7 +82,8 @@ namespace DocumentsGenerator.ViewModels
 
         public string EquipmentUsingAdress { get => equipmentUsingAdress; set { equipmentUsingAdress = value; OnePropertyChanged(); } }
 
-       
+        public SaveFileDialog SaveFileDialog { get; set; } = new SaveFileDialog();
+
         public ObservableCollection<Equipment> Equipments { get; set; }
 
 
@@ -95,12 +97,37 @@ namespace DocumentsGenerator.ViewModels
 
         void GenerateDocuments(object parametr = null)
         {
+            GenerateContract();
+            GenerateAct();
+            GenerateAccount();
+        }
+        void GenerateContract()
+        {
             var contractGenerator = new ContractGenerator();
+            InitSaveFileDialog("Збереження договору", "Договір","doc", "Word документ (.doc)|*.doc");
+            if (SaveFileDialog.ShowDialog()==DialogResult.OK)
+            {
+                contractGenerator.GenerateContract(InitContractDictionary(), Equipments, SaveFileDialog.FileName);
+            }
+        }
+        void GenerateAct()
+        {
             var actGenerator = new ActGenerator();
+            InitSaveFileDialog("Збереження Акту", "Акт", "xlsx", "Excel документ (.xlsx)|*.xlsx");
+            if (SaveFileDialog.ShowDialog()==DialogResult.OK)
+            {
+                actGenerator.GenerateAct(InitActDictionary(), SaveFileDialog.FileName);
+            }
+        }
+
+        void GenerateAccount()
+        {
             var accountGenerator = new AccountGenerator();
-            //contractGenerator.GenerateContract(InitContractDictionary(),Equipments, "TestCon.doc");
-            //actGenerator.GenerateAct(InitActDictionary(),"TestEx.xlsx");
-            accountGenerator.GenerateAccount(InitAccountDictionary(),"TestAccount.xlsx");
+            InitSaveFileDialog("Збереження рахунку","Рахунок", "xlsx", "Excel документ (.xlsx)|*.xlsx");
+            if (SaveFileDialog.ShowDialog()== DialogResult.OK)
+            {
+                accountGenerator.GenerateAccount(InitAccountDictionary(),SaveFileDialog.FileName);
+            }
         }
 
         Dictionary<string,string> InitContractDictionary()
@@ -168,6 +195,14 @@ namespace DocumentsGenerator.ViewModels
                 {"ByWords",TotalAmountWithoutPDVInWords},
                 {"CountDay", (EndRentDate-StartRentDate).Value.Days.ToString() }
             };
+        }
+
+        void InitSaveFileDialog(string title, string fileName, string defExtension, string filter)
+        {
+            SaveFileDialog.Title = title;
+            SaveFileDialog.FileName = fileName;
+            SaveFileDialog.DefaultExt = defExtension;
+            SaveFileDialog.Filter = filter;
         }
         void ClearWindow(object parametr = null)
         {

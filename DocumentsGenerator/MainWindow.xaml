@@ -238,7 +238,7 @@
                 </Border>
 
                 <StackPanel fw:PointerTracker.Enabled="True" Grid.Row="2">
-                    <Button Foreground="Blue" Margin="5" Style="{StaticResource ButtonRevealStyle}" FontSize="12" FontWeight="DemiBold" Width="auto" Command="{Binding GenerateDocumentCommand}" >Згенерувати документи</Button>
+                    <Button Foreground="Blue" Margin="0 1 0 5" Style="{StaticResource ButtonRevealStyle}" FontSize="12" FontWeight="DemiBold" Width="auto" Command="{Binding GenerateDocumentCommand}" >Згенерувати документи</Button>
                     <ProgressBar Visibility="Collapsed" Foreground="DarkBlue"   Margin="5 0" Height="30" Name="Progress"></ProgressBar>
                 </StackPanel>
             </Grid>
