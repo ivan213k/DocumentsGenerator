@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace DocumentsGenerator.Models
 {
@@ -11,30 +12,33 @@ namespace DocumentsGenerator.Models
     {
         private readonly string templateFile = "Договор_Template.docx"; 
 
-        public void GenerateContract(Dictionary<string,string> valuePairs, IEnumerable<Equipment> equipments, string filePath)
+        public async Task GenerateContract(Dictionary<string,string> valuePairs, IEnumerable<Equipment> equipments, string filePath)
         {
-            string docText = "";
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(templateFile,true))
+            await Task.Factory.StartNew(()=> 
             {
-                using (StreamReader sr = new StreamReader(wordDoc.MainDocumentPart.GetStream()))
+                string docText = "";
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(templateFile, true))
                 {
-                    docText = sr.ReadToEnd();
-                }
+                    using (StreamReader sr = new StreamReader(wordDoc.MainDocumentPart.GetStream()))
+                    {
+                        docText = sr.ReadToEnd();
+                    }
 
-                docText = ReplaceMarkersByValues(valuePairs,docText);
-                
-                var savedDoc = wordDoc.SaveAs(filePath);
-                savedDoc.Close();
-            }
-            using (WordprocessingDocument generatedDocument = WordprocessingDocument.Open(filePath, true))
-            {
-                using (StreamWriter sw = new StreamWriter(generatedDocument.MainDocumentPart.GetStream(FileMode.Create)))
-                {
-                    sw.Write(docText);
+                    docText = ReplaceMarkersByValues(valuePairs, docText);
+
+                    var savedDoc = wordDoc.SaveAs(filePath);
+                    savedDoc.Close();
                 }
-                FillTable(equipments, generatedDocument);
-                generatedDocument.Save();
-            }
+                using (WordprocessingDocument generatedDocument = WordprocessingDocument.Open(filePath, true))
+                {
+                    using (StreamWriter sw = new StreamWriter(generatedDocument.MainDocumentPart.GetStream(FileMode.Create)))
+                    {
+                        sw.Write(docText);
+                    }
+                    FillTable(equipments, generatedDocument);
+                    generatedDocument.Save();
+                }
+            });     
         }
 
         void FillTable(IEnumerable<Equipment> equipments, WordprocessingDocument wordDoc)

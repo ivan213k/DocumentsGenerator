@@ -26,7 +26,7 @@ namespace DocumentsGenerator.ViewModels
             }
         }
 
-        bool isEnabled;
+        bool isEnabled = true;
         public bool IsEnabled
         {
             get => isEnabled;

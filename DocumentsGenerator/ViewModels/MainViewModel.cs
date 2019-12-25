@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using DocumentsGenerator.Models;
@@ -86,7 +87,7 @@ namespace DocumentsGenerator.ViewModels
                 {
                     TotalAmountInWords = "";
                 }
-                
+
                 OnePropertyChanged();
             }
         }
@@ -111,7 +112,7 @@ namespace DocumentsGenerator.ViewModels
             }
         }
 
-        public string TotalAmountWithoutPDVInWords { get => totalAmountWithoutPDVInWords ; set { totalAmountWithoutPDVInWords = value; OnePropertyChanged(); } }
+        public string TotalAmountWithoutPDVInWords { get => totalAmountWithoutPDVInWords; set { totalAmountWithoutPDVInWords = value; OnePropertyChanged(); } }
 
         public string EquipmentUsingAdress { get => equipmentUsingAdress; set { equipmentUsingAdress = value; OnePropertyChanged(); } }
 
@@ -130,40 +131,44 @@ namespace DocumentsGenerator.ViewModels
 
         void GenerateDocuments(object parametr = null)
         {
+            EnableProgressBar();
+
             GenerateContract();
             GenerateAct();
             GenerateAccount();
+
+            DisableProgressBar();
         }
-        void GenerateContract()
+        async void GenerateContract()
         {
             var contractGenerator = new ContractGenerator();
-            InitSaveFileDialog("Збереження договору", "Договір","doc", "Word документ (.doc)|*.doc");
-            if (SaveFileDialog.ShowDialog()==DialogResult.OK)
+            InitSaveFileDialog("Збереження договору", "Договір", "doc", "Word документ (.doc)|*.doc");
+            if (SaveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                contractGenerator.GenerateContract(InitContractDictionary(), Equipments, SaveFileDialog.FileName);
+                await contractGenerator.GenerateContract(InitContractDictionary(), Equipments, SaveFileDialog.FileName);
             }
         }
-        void GenerateAct()
+        async void GenerateAct()
         {
             var actGenerator = new ActGenerator();
             InitSaveFileDialog("Збереження Акту", "Акт", "xlsx", "Excel документ (.xlsx)|*.xlsx");
-            if (SaveFileDialog.ShowDialog()==DialogResult.OK)
+            if (SaveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                actGenerator.GenerateAct(InitActDictionary(), SaveFileDialog.FileName);
+                await actGenerator.GenerateAct(InitActDictionary(), SaveFileDialog.FileName);
             }
         }
 
-        void GenerateAccount()
+        async void GenerateAccount()
         {
             var accountGenerator = new AccountGenerator();
-            InitSaveFileDialog("Збереження рахунку","Рахунок", "xlsx", "Excel документ (.xlsx)|*.xlsx");
-            if (SaveFileDialog.ShowDialog()== DialogResult.OK)
+            InitSaveFileDialog("Збереження рахунку", "Рахунок", "xlsx", "Excel документ (.xlsx)|*.xlsx");
+            if (SaveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                accountGenerator.GenerateAccount(InitAccountDictionary(),SaveFileDialog.FileName);
+                await accountGenerator.GenerateAccount(InitAccountDictionary(), SaveFileDialog.FileName);
             }
         }
 
-        Dictionary<string,string> InitContractDictionary()
+        Dictionary<string, string> InitContractDictionary()
         {
             return new Dictionary<string, string>()
             {
