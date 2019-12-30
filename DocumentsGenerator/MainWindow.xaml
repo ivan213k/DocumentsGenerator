@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
-        xmlns:local="clr-namespace:DocumentsGenerator"
         xmlns:viewmodels="clr-namespace:DocumentsGenerator.ViewModels"
         mc:Ignorable="d"
         xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
@@ -26,7 +25,6 @@
             <Setter Property="FontSize" Value="12"></Setter>
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
             <Setter Property="Margin" Value="2 2 20 2"></Setter>
-
         </Style>
         <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxRevealStyle}">
             <Setter Property="Margin" Value="2"></Setter>
@@ -37,23 +35,18 @@
         <Style TargetType="Border">
             <Setter Property="BorderBrush" Value="Aquamarine" ></Setter>
             <Setter Property="BorderThickness" Value="1"></Setter>
-            
         </Style>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     </Window.Resources>
     <Grid IsEnabled="{Binding IsEnabled}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="auto"/>
-        </Grid.ColumnDefinitions>
         <ScrollViewer>
             <Grid Margin="10" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <Grid >
+                <Grid Grid.Row="0" >
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -75,13 +68,11 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-
                     <Border Grid.Row="0">
                         <TextBlock Text="Договір №" />
                     </Border>
@@ -199,7 +190,7 @@
                     </Border>
                     <Border Grid.Column="1" Grid.Row="18">
                         <wpfTool:DecimalUpDown Value="{Binding TotalAmountWithoutPDV}" Margin="2" TextAlignment="Left" Minimum="0" FormatString="F2"/>
-                    </Border> 
+                    </Border>
                     <Border Grid.Column="1" Grid.Row="19">
                         <TextBox KeyUp="TextBox_KeyDown" Text="{Binding EquipmentUsingAdress}" />
                     </Border>
@@ -214,7 +205,7 @@
                             <Expander.Header>
                                 <TextBlock  Text="Список обладнання"/>
                             </Expander.Header>
-                            <Grid  Height="100">
+                            <Grid MinHeight="100">
                                 <DataGrid Name="DataGridEquipments" ItemsSource="{Binding Equipments,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False" AutoGenerateColumns="False" >
                                     <DataGrid.Columns>
                                         <DataGridTextColumn  Binding="{Binding Name}" Width="200" TextBlock.TextAlignment="Center"  Header="Найменування"   />
@@ -225,9 +216,7 @@
                                         <DataGridTextColumn Binding="{Binding EndDate}" Header="Дата кінця оренди" Width="Auto" />
                                         <DataGridTextColumn Binding="{Binding Amount}" Header="Сума" Width="70" />
                                     </DataGrid.Columns>
-
                                 </DataGrid>
-
                             </Grid>
                         </Expander>
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">
@@ -236,13 +225,13 @@
                         </StackPanel>
                     </Grid>
                 </Border>
-
-                <StackPanel fw:PointerTracker.Enabled="True" Grid.Row="2">
-                    <Button Foreground="Blue" Margin="0 1 0 5" Style="{StaticResource ButtonRevealStyle}" FontSize="12" FontWeight="DemiBold" Width="auto" Command="{Binding GenerateDocumentCommand}" >Згенерувати документи</Button>
-                    <ProgressBar Visibility="{Binding Path=IsDeterminate,Converter={StaticResource BoolToVisibility}}" IsIndeterminate="{Binding IsDeterminate}" Foreground="DarkBlue"   Margin="5 0" Height="30" Name="Progress"/>
-                </StackPanel>
+                <Grid fw:PointerTracker.Enabled="True" Grid.Row="2">
+                    <StackPanel VerticalAlignment="Bottom">
+                        <Button VerticalAlignment="Bottom" Foreground="Blue" Margin="0 1 0 5" Style="{StaticResource ButtonRevealStyle}" FontSize="12" FontWeight="DemiBold" Width="auto" Command="{Binding GenerateDocumentCommand}" >Згенерувати документи</Button>
+                        <ProgressBar Visibility="{Binding Path=IsDeterminate,Converter={StaticResource BoolToVisibility}}" IsIndeterminate="{Binding IsDeterminate}" Foreground="Green"  Margin="5 0" Height="20" Name="Progress"/>
+                    </StackPanel>
+                </Grid>
             </Grid>
-
         </ScrollViewer>
     </Grid>
 </Window>
