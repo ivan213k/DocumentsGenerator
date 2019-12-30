@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -112,7 +113,15 @@ namespace DocumentsGenerator.ViewModels
             }
         }
 
-        public string TotalAmountWithoutPDVInWords { get => totalAmountWithoutPDVInWords; set { totalAmountWithoutPDVInWords = value; OnePropertyChanged(); } }
+        public string TotalAmountWithoutPDVInWords
+        {
+            get => totalAmountWithoutPDVInWords;
+            set
+            {
+                totalAmountWithoutPDVInWords = value;
+                OnePropertyChanged();
+            }
+        }
 
         public string EquipmentUsingAdress { get => equipmentUsingAdress; set { equipmentUsingAdress = value; OnePropertyChanged(); } }
 
@@ -120,6 +129,7 @@ namespace DocumentsGenerator.ViewModels
 
         public ObservableCollection<Equipment> Equipments { get; set; }
 
+        public List<string> GeneratedFiles { get; set; } = new List<string>();
 
         public ICommand GenerateDocumentCommand { get; set; }
 
@@ -129,42 +139,50 @@ namespace DocumentsGenerator.ViewModels
 
         public ICommand RemoveEquipmentCommand { get; set; }
 
-        void GenerateDocuments(object parametr = null)
+        async void GenerateDocuments(object parametr = null)
         {
+            GeneratedFiles.Clear();
             EnableProgressBar();
 
-            GenerateContract();
-            GenerateAct();
-            GenerateAccount();
+            await GenerateContract();
+            await GenerateAct();
+            await GenerateAccount();
 
             DisableProgressBar();
+            OpenFiles(GeneratedFiles);
         }
-        async void GenerateContract()
+        async Task GenerateContract()
         {
             var contractGenerator = new ContractGenerator();
             InitSaveFileDialog("Збереження договору", "Договір", "doc", "Word документ (.doc)|*.doc");
             if (SaveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                await contractGenerator.GenerateContract(InitContractDictionary(), Equipments, SaveFileDialog.FileName);
+                string filePath = SaveFileDialog.FileName;
+                await contractGenerator.GenerateContract(InitContractDictionary(), Equipments, filePath);
+                GeneratedFiles.Add(filePath);
             }
         }
-        async void GenerateAct()
+        async Task GenerateAct()
         {
             var actGenerator = new ActGenerator();
             InitSaveFileDialog("Збереження Акту", "Акт", "xlsx", "Excel документ (.xlsx)|*.xlsx");
             if (SaveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                await actGenerator.GenerateAct(InitActDictionary(), SaveFileDialog.FileName);
+                string filePath = SaveFileDialog.FileName;
+                await actGenerator.GenerateAct(InitActDictionary(), filePath);
+                GeneratedFiles.Add(filePath);
             }
         }
 
-        async void GenerateAccount()
+        async Task GenerateAccount()
         {
             var accountGenerator = new AccountGenerator();
             InitSaveFileDialog("Збереження рахунку", "Рахунок", "xlsx", "Excel документ (.xlsx)|*.xlsx");
             if (SaveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                await accountGenerator.GenerateAccount(InitAccountDictionary(), SaveFileDialog.FileName);
+                string filePath = SaveFileDialog.FileName;
+                await accountGenerator.GenerateAccount(InitAccountDictionary(), filePath);
+                GeneratedFiles.Add(filePath);
             }
         }
 
@@ -176,7 +194,7 @@ namespace DocumentsGenerator.ViewModels
                 {"ContractDate",ContractDate.Value.GetDateTimeFormats()[3].Replace("р.","року")},
                 {"CompanyName",CompanyName},
                 {"StartDate",StartRentDate.Value.GetDateTimeFormats()[1].Remove(5)},
-                {"EndDate",EndRentDate.Value.GetDateTimeFormats()[3].Replace("р.","року")},
+                {"EndDate",EndRentDate.Value.ToString("dd.MM.yyyy")+" року"},
                 {"PostIndex",PostIndex },
                 {"Adress",Adress },
                 {"AccountNumber",SettlementAccount },
@@ -194,21 +212,38 @@ namespace DocumentsGenerator.ViewModels
 
         Dictionary<string, string> InitActDictionary()
         {
+            var adressPart1 = "";
+            var adressPart2 = "";
+            try
+            {  
+                var words = Adress.Split(' ');
+                adressPart1 = words[0] + " " + words[1];
+                for (int i = 2; i < words.Length; i++)
+                {
+                    adressPart2 += words[i] + " ";
+                }
+            }
+            catch
+            {
+                adressPart1 = "";
+                adressPart2 = Adress;
+            }
+            
             return new Dictionary<string, string>()
             {
                 {"ActNumber",ActId },
                 {"CompanyName",CompanyName},
                 {"PostIndex",PostIndex },
-                {"Adress",Adress },
+                {"Adress",adressPart1 },
+                {"AdrPart2",adressPart2 },
                 {"AccountNumber",SettlementAccount },
                 {"Bank",BankName },
                 {"MFO",BankMFO },
                 {"CodeEDRPOY",CompanyYEDROPOU },
-                {"ActDate" ,ActDate.Value.GetDateTimeFormats()[1]},
+                {"ActDate" ,ActDate.Value.ToString("dd MMMM yyyy")+" року"},
                 {"FactureNumber",AccountId },
-
-                { "FactureDate",AccountDate.Value.GetDateTimeFormats()[1] },
-                {"SumWithoutPDV",TotalAmountWithoutPDV.ToString() },
+                {"FactureDate",AccountDate.Value.GetDateTimeFormats()[1] },
+                {"SumWithoutPDV",TotalAmountWithoutPDV.Value.ToString("F2") },
                 {"ByWords",TotalAmountWithoutPDVInWords},
             };
         }
@@ -224,12 +259,9 @@ namespace DocumentsGenerator.ViewModels
                 {"Bank",BankName },
                 {"MFO",BankMFO },
                 {"CodeEDRPOY",CompanyYEDROPOU },
-
-                { "FactureNumber",AccountId },
-
+                {"FactureNumber",AccountId },
                 {"FactureDate",AccountDate.Value.GetDateTimeFormats()[1] },
-
-                { "SumWithoutPDV",TotalAmountWithoutPDV.ToString() },
+                {"SumWithoutPDV",TotalAmountWithoutPDV.Value.ToString("F2") },
                 {"ByWords",TotalAmountWithoutPDVInWords},
                 {"CountDay", (EndRentDate-StartRentDate).Value.Days.ToString() }
             };
@@ -293,5 +325,19 @@ namespace DocumentsGenerator.ViewModels
             }
         }
 
+        void OpenFiles(IEnumerable<string> files)
+        {
+            foreach (var file in files)
+            {
+                try
+                {
+                    Process.Start(file);
+                }
+                catch
+                {
+                    //ignore
+                }
+            }   
+        }
     }
 }
