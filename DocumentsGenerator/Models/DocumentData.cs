@@ -23,11 +23,11 @@ namespace DocumentsGenerator.Models
 
         public string MFO { get; set; }
 
-        public decimal? AmountWithoutPDV { get; set; }
+        public decimal AmountWithoutPDV { get; set; }
 
         public string AmountWithoutPDVInWords { get; set; }
 
-        public decimal? TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
 
         public string TotalAmountInWords { get; set; }
 

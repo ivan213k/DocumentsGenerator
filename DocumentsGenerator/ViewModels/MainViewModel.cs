@@ -27,9 +27,9 @@ namespace DocumentsGenerator.ViewModels
         private string actId;
         private DateTime? actDate;
         private string companyDirector;
-        private decimal? totalAmount;
+        private decimal totalAmount;
         private string totalAmountInWords;
-        private decimal? totalAmountWithoutPDV;
+        private decimal totalAmountWithoutPDV;
         private string totalAmountWithoutPDVInWords;
         private string equipmentUsingAdress;
         MoneyToStrConverter moneyToStrConverter = new MoneyToStrConverter("UAH", "UKR", "F");
@@ -74,7 +74,7 @@ namespace DocumentsGenerator.ViewModels
 
         public string CompanyDirector { get => companyDirector; set { companyDirector = value; OnePropertyChanged(); } }
 
-        public decimal? TotalAmount
+        public decimal TotalAmount
         {
             get => totalAmount;
             set
@@ -95,7 +95,7 @@ namespace DocumentsGenerator.ViewModels
 
         public string TotalAmountInWords { get => totalAmountInWords; set { totalAmountInWords = value; OnePropertyChanged(); } }
 
-        public decimal? TotalAmountWithoutPDV
+        public decimal TotalAmountWithoutPDV
         {
             get => totalAmountWithoutPDV;
             set
@@ -191,18 +191,18 @@ namespace DocumentsGenerator.ViewModels
             return new Dictionary<string, string>()
             {
                 {"ContractNumber",ContractId},
-                {"ContractDate",ContractDate.Value.GetDateTimeFormats()[3].Replace("р.","року")},
+                {"ContractDate",ContractDate == null ? "-": ContractDate.Value.GetDateTimeFormats()[3].Replace("р.","року")},
                 {"CompanyName",CompanyName},
-                {"StartDate",StartRentDate.Value.GetDateTimeFormats()[1].Remove(5)},
-                {"EndDate",EndRentDate.Value.ToString("dd.MM.yyyy")+" року"},
+                {"StartDate",StartRentDate==null ? "-" : StartRentDate.Value.GetDateTimeFormats()[1].Remove(5)},
+                {"EndDate",EndRentDate==null ? "-" : EndRentDate.Value.ToString("dd.MM.yyyy")+" року"},
                 {"PostIndex",PostIndex },
                 {"Adress",Adress },
                 {"AccountNumber",SettlementAccount },
                 {"Bank",BankName },
                 {"MFO",BankMFO },
                 {"CodeEDRPOY",CompanyYEDROPOU },
-                {"ShortDate",ContractDate.Value.GetDateTimeFormats()[1] },
-                {"FullDate",ContractDate.Value.GetDateTimeFormats()[0]+"р." },
+                {"ShortDate",ContractDate==null? "-" : ContractDate.Value.GetDateTimeFormats()[1]},
+                {"FullDate",ContractDate ==null? "-": ContractDate.Value.GetDateTimeFormats()[0]+"р." },
                 {"Sum",TotalAmount.ToString() },
                 {"EqPlace",EquipmentUsingAdress},
                 {"ByWords",TotalAmountInWords},
@@ -240,16 +240,21 @@ namespace DocumentsGenerator.ViewModels
                 {"Bank",BankName },
                 {"MFO",BankMFO },
                 {"CodeEDRPOY",CompanyYEDROPOU },
-                {"ActDate" ,ActDate.Value.ToString("dd MMMM yyyy")+" року"},
+                {"ActDate" ,ActDate==null?"-":ActDate.Value.ToString("dd MMMM yyyy")+" року"},
                 {"FactureNumber",AccountId },
-                {"FactureDate",AccountDate.Value.GetDateTimeFormats()[1] },
-                {"SumWithoutPDV",TotalAmountWithoutPDV.Value.ToString("F2") },
+                {"FactureDate",AccountDate==null?"-":AccountDate.Value.GetDateTimeFormats()[1] },
+                {"SumWithoutPDV",TotalAmountWithoutPDV.ToString("F2") },
                 {"ByWords",TotalAmountWithoutPDVInWords},
             };
         }
 
         Dictionary<string, string> InitAccountDictionary()
         {
+            int days = 0;
+            if (StartRentDate != null && EndRentDate != null)
+            {
+                days = (EndRentDate - StartRentDate).Value.Days;
+            }
             return new Dictionary<string, string>()
             {
                 {"CompanyName",CompanyName},
@@ -260,10 +265,10 @@ namespace DocumentsGenerator.ViewModels
                 {"MFO",BankMFO },
                 {"CodeEDRPOY",CompanyYEDROPOU },
                 {"FactureNumber",AccountId },
-                {"FactureDate",AccountDate.Value.GetDateTimeFormats()[1] },
-                {"SumWithoutPDV",TotalAmountWithoutPDV.Value.ToString("F2") },
+                {"FactureDate",AccountDate==null ? "-" : AccountDate.Value.GetDateTimeFormats()[1] },
+                {"SumWithoutPDV",TotalAmountWithoutPDV.ToString("F2") },
                 {"ByWords",TotalAmountWithoutPDVInWords},
-                {"CountDay", (EndRentDate-StartRentDate).Value.Days.ToString() }
+                {"CountDay", days.ToString() }
             };
         }
 
@@ -292,7 +297,7 @@ namespace DocumentsGenerator.ViewModels
             EndRentDate = null;
             TotalAmount = 0.0M;
             TotalAmountInWords = "";
-            TotalAmountWithoutPDV = null;
+            TotalAmountWithoutPDV = 0.0M;
             TotalAmountWithoutPDVInWords = "";
             PostIndex = "";
             EquipmentUsingAdress = "";

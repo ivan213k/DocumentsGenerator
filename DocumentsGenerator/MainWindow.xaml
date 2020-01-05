@@ -183,13 +183,13 @@
                         <TextBox KeyUp="TextBox_KeyDown" Text="{Binding CompanyDirector}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="16">
-                        <wpfTool:DecimalUpDown Value="{Binding TotalAmount}" Margin="2" TextAlignment="Left" Minimum="0" FormatString="F2"/>
+                        <wpfTool:DecimalUpDown DisplayDefaultValueOnEmptyText="True" DefaultValue="0.00" Value="{Binding TotalAmount}" Margin="2" TextAlignment="Left" Minimum="0" FormatString="F2"/>
                     </Border>
                     <Border Grid.Column="1" Grid.Row="17">
                         <TextBox KeyUp="TextBox_KeyDown" Text="{Binding TotalAmountInWords}" />
                     </Border>
                     <Border Grid.Column="1" Grid.Row="18">
-                        <wpfTool:DecimalUpDown Value="{Binding TotalAmountWithoutPDV}" Margin="2" TextAlignment="Left" Minimum="0" FormatString="F2"/>
+                        <wpfTool:DecimalUpDown DisplayDefaultValueOnEmptyText="True" DefaultValue="0.00" Value="{Binding TotalAmountWithoutPDV}" Margin="2" TextAlignment="Left" Minimum="0" FormatString="F2"/>
                     </Border>
                     <Border Grid.Column="1" Grid.Row="19">
                         <TextBox KeyUp="TextBox_KeyDown" Text="{Binding EquipmentUsingAdress}" />
