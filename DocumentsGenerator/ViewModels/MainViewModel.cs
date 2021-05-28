@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -11,28 +12,29 @@ namespace DocumentsGenerator.ViewModels
 {
     class MainViewModel : BaseViewModel
     {
-        private string contractId;
+        private string contractId = "";
         private DateTime? contractDate;
-        private string companyName;
+        private string companyName = "";
         private DateTime? startRentDate;
         private DateTime? endRentDate;
-        private string postIndex;
-        private string adress;
-        private string settlementAccount;
-        private string bankMFO;
-        private string bankName;
-        private string companyYEDROPOU;
-        private string accountId;
+        private string postIndex = "";
+        private string adress = "";
+        private string settlementAccount = "";
+        private string bankMFO = "";
+        private string bankName = "";
+        private string companyYEDROPOU = "";
+        private string accountId = "";
         private DateTime? accountDate;
-        private string actId;
+        private string actId = "";
         private DateTime? actDate;
-        private string companyDirector;
+        private string companyDirector = "";
         private decimal totalAmount;
-        private string totalAmountInWords;
+        private string totalAmountInWords = "";
         private decimal totalAmountWithoutPDV;
-        private string totalAmountWithoutPDVInWords;
-        private string equipmentUsingAdress;
+        private string totalAmountWithoutPDVInWords = "";
+        private string equipmentUsingAdress = "";
         MoneyToStrConverter moneyToStrConverter = new MoneyToStrConverter("UAH", "UKR", "F");
+        IFormatProvider culture = new CultureInfo("uk-UA");
         public MainViewModel()
         {
             Equipments = new ObservableCollection<Equipment>();
@@ -141,15 +143,25 @@ namespace DocumentsGenerator.ViewModels
 
         async void GenerateDocuments(object parametr = null)
         {
-            GeneratedFiles.Clear();
-            EnableProgressBar();
+            try
+            {
+                EnableProgressBar();
 
-            await GenerateContract();
-            await GenerateAct();
-            await GenerateAccount();
+                await GenerateContract();
+                await GenerateAct();
+                await GenerateAccount();
 
-            DisableProgressBar();
-            OpenFiles(GeneratedFiles);
+                OpenFiles();
+            }
+            catch (Exception exeption)
+            {
+                MessageBox.Show($"{exeption.Message}\n{exeption.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                DisableProgressBar();
+            }
+
         }
         async Task GenerateContract()
         {
@@ -190,23 +202,23 @@ namespace DocumentsGenerator.ViewModels
         {
             return new Dictionary<string, string>()
             {
-                {"ContractNumber",ContractId},
-                {"ContractDate",ContractDate == null ? "-": ContractDate.Value.GetDateTimeFormats()[3].Replace("р.","року")},
-                {"CompanyName",CompanyName},
-                {"StartDate",StartRentDate==null ? "-" : StartRentDate.Value.GetDateTimeFormats()[1].Remove(5)},
-                {"EndDate",EndRentDate==null ? "-" : EndRentDate.Value.ToString("dd.MM.yyyy")+" року"},
-                {"PostIndex",PostIndex },
-                {"Adress",Adress },
-                {"AccountNumber",SettlementAccount },
-                {"Bank",BankName },
-                {"MFO",BankMFO },
-                {"CodeEDRPOY",CompanyYEDROPOU },
-                {"ShortDate",ContractDate==null? "-" : ContractDate.Value.GetDateTimeFormats()[1]},
-                {"FullDate",ContractDate ==null? "-": ContractDate.Value.GetDateTimeFormats()[0]+"р." },
-                {"Sum",TotalAmount.ToString() },
-                {"EqPlace",EquipmentUsingAdress},
-                {"ByWords",TotalAmountInWords},
-                {"DirectoryName",CompanyDirector }
+                {"ContractNumber", ContractId},
+                {"ContractDate", ContractDate is null ? "-": ContractDate.Value.GetDateTimeFormats(culture)[3].Replace("р.","року")},
+                {"CompanyName", CompanyName},
+                {"StartDate", StartRentDate is null ? "-" : StartRentDate.Value.GetDateTimeFormats(culture)[1].Remove(5)},
+                {"EndDate", EndRentDate is null ? "-" : EndRentDate.Value.ToString("dd.MM.yyyy",culture)+" року"},
+                {"PostIndex", PostIndex },
+                {"Adress", Adress },
+                {"AccountNumber", SettlementAccount },
+                {"Bank", BankName },
+                {"MFO", BankMFO },
+                {"CodeEDRPOY", CompanyYEDROPOU },
+                {"ShortDate", ContractDate is null ? "-" : ContractDate.Value.GetDateTimeFormats(culture)[1]},
+                {"FullDate", ContractDate is null ? "-": ContractDate.Value.GetDateTimeFormats(culture)[0]+"р." },
+                {"Sum", TotalAmount.ToString() },
+                {"EqPlace", EquipmentUsingAdress},
+                {"ByWords", TotalAmountInWords},
+                {"DirectoryName", CompanyDirector }
             };
         }
 
@@ -215,7 +227,7 @@ namespace DocumentsGenerator.ViewModels
             var adressPart1 = "";
             var adressPart2 = "";
             try
-            {  
+            {
                 var words = Adress.Split(' ');
                 adressPart1 = words[0] + " " + words[1];
                 for (int i = 2; i < words.Length; i++)
@@ -228,23 +240,23 @@ namespace DocumentsGenerator.ViewModels
                 adressPart1 = "";
                 adressPart2 = Adress;
             }
-            
+
             return new Dictionary<string, string>()
             {
-                {"ActNumber",ActId },
-                {"CompanyName",CompanyName},
-                {"PostIndex",PostIndex },
-                {"Adress",adressPart1 },
-                {"AdrPart2",adressPart2 },
-                {"AccountNumber",SettlementAccount },
-                {"Bank",BankName },
-                {"MFO",BankMFO },
-                {"CodeEDRPOY",CompanyYEDROPOU },
-                {"ActDate" ,ActDate==null?"-":ActDate.Value.ToString("dd MMMM yyyy")+" року"},
-                {"FactureNumber",AccountId },
-                {"FactureDate",AccountDate==null?"-":AccountDate.Value.GetDateTimeFormats()[1] },
-                {"SumWithoutPDV",TotalAmountWithoutPDV.ToString("F2") },
-                {"ByWords",TotalAmountWithoutPDVInWords},
+                {"ActNumber", ActId},
+                {"CompanyName", CompanyName},
+                {"PostIndex", PostIndex },
+                {"Adress", adressPart1},
+                {"AdrPart2", adressPart2},
+                {"AccountNumber", SettlementAccount},
+                {"Bank", BankName},
+                {"MFO", BankMFO },
+                {"CodeEDRPOY", CompanyYEDROPOU },
+                {"ActDate", ActDate is null ? "-" : ActDate.Value.ToString("dd MMMM yyyy",culture)+" року"},
+                {"FactureNumber", AccountId },
+                {"FactureDate", AccountDate is null ? "-":AccountDate.Value.GetDateTimeFormats(culture)[1] },
+                {"SumWithoutPDV", TotalAmountWithoutPDV.ToString("F2") },
+                {"ByWords", TotalAmountWithoutPDVInWords},
             };
         }
 
@@ -257,17 +269,17 @@ namespace DocumentsGenerator.ViewModels
             }
             return new Dictionary<string, string>()
             {
-                {"CompanyName",CompanyName},
-                {"PostIndex",PostIndex },
-                {"Adress",Adress },
-                {"AccountNumber",SettlementAccount },
-                {"Bank",BankName },
-                {"MFO",BankMFO },
-                {"CodeEDRPOY",CompanyYEDROPOU },
-                {"FactureNumber",AccountId },
-                {"FactureDate",AccountDate==null ? "-" : AccountDate.Value.GetDateTimeFormats()[1] },
-                {"SumWithoutPDV",TotalAmountWithoutPDV.ToString("F2") },
-                {"ByWords",TotalAmountWithoutPDVInWords},
+                {"CompanyName", CompanyName},
+                {"PostIndex", PostIndex },
+                {"Adress", Adress },
+                {"AccountNumber", SettlementAccount },
+                {"Bank", BankName },
+                {"MFO", BankMFO },
+                {"CodeEDRPOY", CompanyYEDROPOU },
+                {"FactureNumber", AccountId },
+                {"FactureDate", AccountDate is null ? "-" : AccountDate.Value.GetDateTimeFormats(culture)[1] },
+                {"SumWithoutPDV", TotalAmountWithoutPDV.ToString("F2") },
+                {"ByWords", TotalAmountWithoutPDVInWords},
                 {"CountDay", days.ToString() }
             };
         }
@@ -330,9 +342,9 @@ namespace DocumentsGenerator.ViewModels
             }
         }
 
-        void OpenFiles(IEnumerable<string> files)
+        void OpenFiles()
         {
-            foreach (var file in files)
+            foreach (var file in GeneratedFiles)
             {
                 try
                 {
@@ -342,7 +354,8 @@ namespace DocumentsGenerator.ViewModels
                 {
                     //ignore
                 }
-            }   
+            }
+            GeneratedFiles.Clear();
         }
     }
 }
