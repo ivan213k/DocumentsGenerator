@@ -1,5 +1,6 @@
 ﻿using DocumentsGenerator.Models;
 using DocumentsGenerator.ViewModels;
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
@@ -61,6 +62,10 @@ namespace DocumentsGenerator
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            ChooseFOPDialogWindow dialog = new ChooseFOPDialogWindow();
+            dialog.Owner = this;
+            dialog.ShowDialog();
+
             BinaryFormatter formatter = new BinaryFormatter();
             using (FileStream fs = new FileStream("data.dat",FileMode.OpenOrCreate))
             {

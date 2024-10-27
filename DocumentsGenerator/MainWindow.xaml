@@ -7,7 +7,7 @@
         xmlns:viewmodels="clr-namespace:DocumentsGenerator.ViewModels"
         mc:Ignorable="d"
         xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
-        Title="Автоматичне заповнення документів" Closing="Window_Closing" Loaded="Window_Loaded" fw:AcrylicWindow.Enabled="True" Icon="Resources/office.png" WindowStartupLocation="CenterScreen" Height="630" FontWeight="DemiBold" Width="866">
+        Title="Автоматичне заповнення документів" Closing="Window_Closing" Loaded="Window_Loaded" fw:AcrylicWindow.Enabled="True" Icon="Resources/office.png" WindowStartupLocation="CenterScreen" Height="630" FontWeight="DemiBold" Width="1010">
     <Window.DataContext>
         <viewmodels:MainViewModel></viewmodels:MainViewModel>
     </Window.DataContext>
@@ -201,14 +201,10 @@
                             <ColumnDefinition/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <Expander Name="DataExpander" FontSize="11">
-                            <Expander.Header>
-                                <TextBlock  Text="Список обладнання"/>
-                            </Expander.Header>
-                            <Grid MinHeight="100">
-                                <DataGrid Name="DataGridEquipments" ItemsSource="{Binding Equipments,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False" AutoGenerateColumns="False" >
+                        <Grid MinHeight="100">
+                                <DataGrid Margin="5" Name="DataGridEquipments" ItemsSource="{Binding Equipments,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False" AutoGenerateColumns="False" >
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn  Binding="{Binding Name}" Width="200" TextBlock.TextAlignment="Center"  Header="Найменування"   />
+                                        <DataGridTextColumn  Binding="{Binding Name}" Width="300" TextBlock.TextAlignment="Center"  Header="Найменування"   />
                                         <DataGridHyperlinkColumn Binding="{Binding Count}" Width="100" Header="Кількість, шт." />
                                         <DataGridTextColumn Binding="{Binding ReplacmentCost}"  Header="Відновна вартість за шт." Width="120" />
                                         <DataGridTextColumn Binding="{Binding Termin}" Header="Строк оренди" Width="auto" />
@@ -216,9 +212,8 @@
                                         <DataGridTextColumn Binding="{Binding EndDate}" Header="Дата кінця оренди" Width="Auto" />
                                         <DataGridTextColumn Binding="{Binding Amount}" Header="Сума" Width="70" />
                                     </DataGrid.Columns>
-                                </DataGrid>
+                            </DataGrid>
                             </Grid>
-                        </Expander>
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">
                             <Button Command="{Binding AddEquipmentCommand}" Style="{StaticResource ButtonRevealStyle}" Visibility="{Binding ElementName=DataExpander,Path=IsExpanded,Converter={StaticResource BooleanToVisibilityConverter}}" FontWeight="Bold" Padding="0 0 0 2" FontSize="15" HorizontalContentAlignment="Center" HorizontalAlignment="Center"  VerticalContentAlignment="Center" Height="20" Width="20" VerticalAlignment="Center" Foreground="White">+</Button>
                             <Button Command="{Binding RemoveEquipmentCommand}" CommandParameter="{Binding ElementName=DataGridEquipments,Path=SelectedIndex}" Style="{StaticResource ButtonRevealStyle}" FontSize="15" FontWeight="Bold" Margin="0 5 0 0" Visibility="{Binding ElementName=DataExpander,Path=IsExpanded,Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="White">-</Button>
