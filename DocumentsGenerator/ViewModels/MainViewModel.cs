@@ -300,6 +300,7 @@ namespace DocumentsGenerator.ViewModels
                 {"CodeEDRPOY", CompanyYEDROPOU },
                 {"FactureNumber", AccountId },
                 {"FactureDate", AccountDate is null ? "-" : AccountDate.Value.GetDateTimeFormats(culture)[1] },
+                {"StartRentDate", $"{StartRentDate.Value.ToString("dd.MM")} - {EndRentDate.Value.ToString("dd.MM")}" },
                 {"SumWithoutPDV", TotalAmountWithoutPDV.ToString("F2") },
                 {"ByWords", TotalAmountWithoutPDVInWords},
                 {"CountDay", days.ToString() },
