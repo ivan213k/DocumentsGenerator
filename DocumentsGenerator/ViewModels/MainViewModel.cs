@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using DocumentsGenerator.FOP;
 using DocumentsGenerator.Models;
 
 namespace DocumentsGenerator.ViewModels
@@ -42,6 +45,7 @@ namespace DocumentsGenerator.ViewModels
             ClearWindowCommand = new Command(ClearWindow);
             AddEquipmentCommand = new Command(AddEquipment);
             RemoveEquipmentCommand = new Command(RemoveEquipment);
+            AddDefultEquipment();
         }
 
         public string ContractId { get => contractId; set { contractId = value; OnePropertyChanged(); } }
@@ -75,6 +79,8 @@ namespace DocumentsGenerator.ViewModels
         public DateTime? ActDate { get => actDate; set { actDate = value; OnePropertyChanged(); } }
 
         public string CompanyDirector { get => companyDirector; set { companyDirector = value; OnePropertyChanged(); } }
+
+        public FopModel SelectedFOP { get => FopsInfo.SelectedFop; }
 
         public decimal TotalAmount
         {
@@ -218,7 +224,16 @@ namespace DocumentsGenerator.ViewModels
                 {"Sum", TotalAmount.ToString() },
                 {"EqPlace", EquipmentUsingAdress},
                 {"ByWords", TotalAmountInWords},
-                {"DirectoryName", CompanyDirector }
+                {"DirectoryName", CompanyDirector },
+                {"FopsName", SelectedFOP.Name },
+                {"Initials", SelectedFOP.Initials },
+                {"FopsPostCode", SelectedFOP.PostIndex },
+                {"address", SelectedFOP.Address },
+                {"FopsAccountCode", SelectedFOP.AccountNumber },
+                {"Fopsbank", SelectedFOP.Bank },
+                {"FopsMfo", SelectedFOP.MFO },
+                {"FopsIPN", SelectedFOP.CodeEDRPOY },
+                {"FopsPhone", SelectedFOP.PhoneNumber  },
             };
         }
 
@@ -257,6 +272,13 @@ namespace DocumentsGenerator.ViewModels
                 {"FactureDate", AccountDate is null ? "-":AccountDate.Value.GetDateTimeFormats(culture)[1] },
                 {"SumWithoutPDV", TotalAmountWithoutPDV.ToString("F2") },
                 {"ByWords", TotalAmountWithoutPDVInWords},
+                {"fopsinitials", SelectedFOP.Initials },
+                {"fopspostindex", SelectedFOP.PostIndex },
+                {"fopsaddress", SelectedFOP.Address },
+                {"fopsaccountnumber", SelectedFOP.AccountNumber },
+                {"fopsbank", SelectedFOP.Bank },
+                {"fopsmfo", SelectedFOP.MFO },
+                {"fopscodeedrpoy", SelectedFOP.CodeEDRPOY },
             };
         }
 
@@ -278,9 +300,17 @@ namespace DocumentsGenerator.ViewModels
                 {"CodeEDRPOY", CompanyYEDROPOU },
                 {"FactureNumber", AccountId },
                 {"FactureDate", AccountDate is null ? "-" : AccountDate.Value.GetDateTimeFormats(culture)[1] },
+                {"StartRentDate", $"{StartRentDate.Value.ToString("dd.MM")} - {EndRentDate.Value.ToString("dd.MM")}" },
                 {"SumWithoutPDV", TotalAmountWithoutPDV.ToString("F2") },
                 {"ByWords", TotalAmountWithoutPDVInWords},
-                {"CountDay", days.ToString() }
+                {"CountDay", days.ToString() },
+                {"fopsname", SelectedFOP.Name },
+                {"fopspostindex", SelectedFOP.PostIndex },
+                {"fopsaddress", SelectedFOP.Address },
+                {"fopsaccountnumber", SelectedFOP.AccountNumber },
+                {"fopsbank", SelectedFOP.Bank },
+                {"fopsmfo", SelectedFOP.MFO },
+                {"fopscodeedrpoy", SelectedFOP.CodeEDRPOY },
             };
         }
 
@@ -329,6 +359,47 @@ namespace DocumentsGenerator.ViewModels
                 });
             }
             catch (Exception)
+            {
+                Equipments.Add(new Equipment());
+            }
+        }
+
+        void AddDefultEquipment()
+        {
+            string strartDate;
+            string endDate;
+            int termin = 0;
+            DocumentData documentData = null;
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                using (FileStream fs = new FileStream("data.dat", FileMode.Open, FileAccess.Read))
+                {
+                    documentData = (DocumentData)formatter.Deserialize(fs);
+                }
+            }
+            catch (Exception)
+            {
+                //ignore
+            }
+           
+            strartDate = documentData?.StartRentDate?.ToString("dd/MM/yy");
+            endDate = documentData?.EndRentDate?.ToString("dd/MM/yy");
+            if (documentData?.EndRentDate != null && documentData?.StartRentDate != null)
+            {
+                var timeSpan = documentData.EndRentDate - documentData.StartRentDate;
+                termin = timeSpan.Value.Days;
+            }
+
+            Equipments.Add(new Equipment()
+            {
+                Name = "Комплекс послуг з оренди меблів та обладнання",
+                Termin = termin,
+                StartDate = strartDate,
+                EndDate = endDate
+            });
+
+            for (int i = 0; i < 2; i++)
             {
                 Equipments.Add(new Equipment());
             }

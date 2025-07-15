@@ -53,7 +53,8 @@ namespace DocumentsGenerator.Models
             {
                 var newRow = new TableRow(templateRow.OuterXml);
                 var cells = newRow.Elements<TableCell>().ToList();
-                cells[0].Elements<Paragraph>().First().Elements<Run>().First().Elements<Text>().First().Text = rowIndex.ToString();
+                if(!equipment.IsEmpty())
+                    cells[0].Elements<Paragraph>().First().Elements<Run>().First().Elements<Text>().First().Text = rowIndex.ToString();
                 foreach (var item in equipment.GetValues())
                 {
                     cells[item.Key].Elements<Paragraph>().First().Elements<Run>().First().Elements<Text>().First().Text = item.Value;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DocumentsGenerator.Models
 {
@@ -10,17 +6,18 @@ namespace DocumentsGenerator.Models
     {
         public string Name { get; set; }
 
-        public int Count { get; set; }
+        public int? Count { get; set; }
 
-        public decimal ReplacmentCost { get; set; }
+        public decimal? ReplacmentCost { get; set; }
 
-        public int Termin { get; set; }
+        public int? Termin { get; set; }
 
         public string StartDate { get; set; }
 
         public string EndDate { get; set; }
 
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
+
 
         public Dictionary<int, string> GetValues()
         {
@@ -33,6 +30,20 @@ namespace DocumentsGenerator.Models
             cellIndexPairs.Add(6, EndDate);
             cellIndexPairs.Add(7, Amount.ToString());
             return cellIndexPairs;
+        }
+
+        public bool IsEmpty()
+        {
+            if(string.IsNullOrWhiteSpace(Name) 
+                && Count == null 
+                && ReplacmentCost == null 
+                && Termin == null 
+                && string.IsNullOrWhiteSpace(StartDate) 
+                && string.IsNullOrWhiteSpace(EndDate) 
+                && Amount == null)
+                return true;
+
+            return false;
         }
     }
 }
